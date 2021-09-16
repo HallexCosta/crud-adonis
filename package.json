@@ -6,6 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
+    "start:development": "nodemon server.js",
     "test": "node ace test"
   },
   "keywords": [
@@ -30,5 +31,8 @@
   },
   "autoload": {
     "App": "./app"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
   }
 }
