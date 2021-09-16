@@ -12,13 +12,13 @@
 
 /** @type {import('@adonisjs/lucid/src/Factory')} */
 const Factory = use("Factory");
-const Database = use("Database");
+const User = use("App/Models/User");
 
 class UserSeeder {
   async run() {
-    await Factory.model("App/Models/User").createMany(30);
+    await Factory.model("App/Models/User").createMany(2);
 
-    const users = await Database.table("users");
+    const users = (await User.all()).toJSON();
 
     console.log({
       users,
