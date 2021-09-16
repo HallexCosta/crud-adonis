@@ -5,6 +5,7 @@
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
 const Database = use("Database");
+const { validateAll } = use("Validator");
 
 /**
  * Resourceful controller for interacting with users
@@ -51,25 +52,32 @@ class UserController {
   async store({ request, response }) {
     console.log("> POST /users");
 
-    try {
-      const { username, password, email } = request.body;
+    const { username, password, email } = request.body;
 
-      const user = {
-        email,
-        username,
-        password,
-      };
+    const rules = {
+      email: "required|email|unique:users,email",
+      password: "required",
+    };
 
-      Database.select("*").where({ email });
+    const validation = await validateAll(request.all(), rules);
 
-      await Database.insert(user).into("users");
-
-      return response.status(201).json(user);
-    } catch (e) {
+    if (validation.fails()) {
       return response.status(409).json({
-        message: "User already exists",
+        message: "Fields Invalids",
       });
     }
+
+    const user = {
+      email,
+      username,
+      password,
+    };
+
+    Database.select("*").where({ email });
+
+    await Database.insert(user).into("users");
+
+    return response.status(201).json(user);
   }
 
   /**
