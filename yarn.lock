@@ -169,6 +169,15 @@
     "node-guard" "^1.0.0"
     "uuid" "^8.3.2"
 
+"@adonisjs/validator@^5.1.0":
+  "integrity" "sha512-qz4YNfg89MzqfgluMuM1Wq7GSTOd3h2x0rn+cXT8rnva3jkgiWDaqstMSCNAelB3A2KiujbsxZk/HR0k5o9Zkg=="
+  "resolved" "https://registry.npmjs.org/@adonisjs/validator/-/validator-5.1.0.tgz"
+  "version" "5.1.0"
+  dependencies:
+    "@adonisjs/generic-exceptions" "^2.0.1"
+    "indicative" "^5.0.8"
+    "lodash" "^4.17.11"
+
 "@dabh/diagnostics@^2.0.2":
   "integrity" "sha512-+A1YivoVDNNVCdfozHSR8v/jyuuLTMXwjWuxPFlFlUapXoGc+Gj9mDlTDDfrwl7rXCl2tNZ0kE8sIBO6YOn96Q=="
   "resolved" "https://registry.npmjs.org/@dabh/diagnostics/-/diagnostics-2.0.2.tgz"
@@ -1911,6 +1920,11 @@
   "integrity" "sha1-Sl/W0nzDMvN+VBmlBNu4NxBckok="
   "resolved" "https://registry.npmjs.org/indent-string/-/indent-string-3.2.0.tgz"
   "version" "3.2.0"
+
+"indicative@^5.0.8":
+  "integrity" "sha512-Do9YKlrxyvK6RpMs9AdtxmjhweKrA6hJbJejY81iD8aYjjvOU4HYkJcM2IUxC3S7ZRm/L11u67QT4OQ101N5HQ=="
+  "resolved" "https://registry.npmjs.org/indicative/-/indicative-5.0.8.tgz"
+  "version" "5.0.8"
 
 "inflation@^2.0.0":
   "integrity" "sha1-i0F+R8KPklpFEz2RTKH9OJEH8w8="
