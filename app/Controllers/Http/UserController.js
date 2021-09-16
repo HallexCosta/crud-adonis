@@ -4,7 +4,7 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
-const Database = use("Database");
+const User = use("App/Models/User");
 const { validateAll } = use("Validator");
 
 /**
@@ -23,7 +23,7 @@ class UserController {
   async index({ request, response, view }) {
     console.log("> GET /users");
 
-    const users = await Database.select("*").from("users");
+    const users = (await User.all()).toJSON();
 
     response.header("X-Total-Count", users.length);
 
@@ -55,6 +55,7 @@ class UserController {
     const { username, password, email } = request.body;
 
     const rules = {
+      username: "required",
       email: "required|email|unique:users,email",
       password: "required",
     };
@@ -67,17 +68,15 @@ class UserController {
       });
     }
 
-    const user = {
-      email,
-      username,
-      password,
-    };
+    const user = new User();
 
-    Database.select("*").where({ email });
+    user.email = email;
+    user.username = username;
+    user.password = password;
 
-    await Database.insert(user).into("users");
+    await user.save();
 
-    return response.status(201).json(user);
+    return response.status(201).json(user.toJSON());
   }
 
   /**
@@ -92,7 +91,7 @@ class UserController {
   async show({ params: { id }, request, response, view }) {
     console.log("> GET /users/:id");
 
-    const user = await Database.select("*").from("users").where({ id }).first();
+    const user = await User.find(id);
 
     return response.json(user);
   }
@@ -120,13 +119,13 @@ class UserController {
     console.log("> PUT /users/:id");
     const { username, email, password } = request.body;
 
-    const user = {
-      username,
-      email,
-      password,
-    };
+    const user = await User.find(id);
 
-    await Database.table("users").update(user).where({ id });
+    user.username = username;
+    user.email = email;
+    user.password = password;
+
+    await user.save();
 
     return response.json(user);
   }
@@ -140,11 +139,11 @@ class UserController {
    * @param {Response} ctx.response
    */
   async destroy({ params: { id }, request, response }) {
-    const affectedRows = await Database.table("users").where({ id }).delete();
+    const user = await User.find(id);
 
-    return response.json({
-      affectedRows,
-    });
+    await user.delete();
+
+    return response.json(user);
   }
 }
 
