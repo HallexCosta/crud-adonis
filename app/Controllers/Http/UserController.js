@@ -4,6 +4,8 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
+const Database = use("Database");
+
 /**
  * Resourceful controller for interacting with users
  */
@@ -18,7 +20,11 @@ class UserController {
    * @param {View} ctx.view
    */
   async index({ request, response, view }) {
-    console.log("> GET /users");
+    const users = await Database.table("users");
+
+    response.header("X-Total-Count", users.length);
+
+    return response.json(users);
   }
 
   /**
