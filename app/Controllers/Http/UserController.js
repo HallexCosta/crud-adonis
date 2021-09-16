@@ -20,7 +20,9 @@ class UserController {
    * @param {View} ctx.view
    */
   async index({ request, response, view }) {
-    const users = await Database.table("users");
+    console.log("> GET /users");
+
+    const users = await Database.select("*").from("users");
 
     response.header("X-Total-Count", users.length);
 
@@ -48,6 +50,26 @@ class UserController {
    */
   async store({ request, response }) {
     console.log("> POST /users");
+
+    try {
+      const { username, password, email } = request.body;
+
+      const user = {
+        email,
+        username,
+        password,
+      };
+
+      Database.select("*").where({ email });
+
+      await Database.insert(user).into("users");
+
+      return response.status(201).json(user);
+    } catch (e) {
+      return response.status(409).json({
+        message: "User already exists",
+      });
+    }
   }
 
   /**
@@ -59,9 +81,12 @@ class UserController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async show({ params, request, response, view }) {
+  async show({ params: { id }, request, response, view }) {
     console.log("> GET /users/:id");
-    console.log("ID: ", params.id);
+
+    const user = await Database.select("*").from("users").where({ id }).first();
+
+    return response.json(user);
   }
 
   /**
@@ -83,7 +108,20 @@ class UserController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update({ params, request, response }) {}
+  async update({ params: { id }, request, response }) {
+    console.log("> PUT /users/:id");
+    const { username, email, password } = request.body;
+
+    const user = {
+      username,
+      email,
+      password,
+    };
+
+    await Database.table("users").update(user).where({ id });
+
+    return response.json(user);
+  }
 
   /**
    * Delete a user with id.
@@ -93,7 +131,13 @@ class UserController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async destroy({ params, request, response }) {}
+  async destroy({ params: { id }, request, response }) {
+    const affectedRows = await Database.table("users").where({ id }).delete();
+
+    return response.json({
+      affectedRows,
+    });
+  }
 }
 
 module.exports = UserController;
