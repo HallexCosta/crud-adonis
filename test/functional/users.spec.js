@@ -7,12 +7,20 @@ const { test, trait, before } = use("Test/Suite")("User Functional");
 
 trait("Test/ApiClient");
 
-test("create an user and given id", async ({ client, assert, faker }) => {
-  const user = await Factory.model("App/Models/User").create();
+test("create an user and given id", async ({ client, assert }) => {
+  const users = await User.all();
 
-  await client.post("/users").send(user);
+  const { body: user } = await client
+    .post("/users")
+    .send({
+      username: `testing${users.length}`,
+      email: `testing${users.length}@test.com`,
+      password: "hallex123",
+    })
+    .end();
 
-  const userCreatedWithSuccess = (await User.find(user.id)).toJSON();
+  assert.property(user, "id");
 
-  assert.property(userCreatedWithSuccess, "id");
+  const userCreatedWithSuccess = await User.find(user.id);
+  await userCreatedWithSuccess.delete();
 });
