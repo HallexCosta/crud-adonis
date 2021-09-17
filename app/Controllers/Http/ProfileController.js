@@ -31,6 +31,25 @@ class ProfileController {
   }
 
   /**
+   * Show a list of all profiles.
+   * GET profiles/users
+   *
+   * @param {object} ctx
+   * @param {Request} ctx.request
+   * @param {Response} ctx.response
+   * @param {View} ctx.view
+   */
+  async indexUser({ request, response, view }) {
+    console.log("> GET /profiles");
+
+    const profiles = (await Profile.query().with("user").fetch()).toJSON();
+
+    response.header("X-Total-Count", profiles.length);
+
+    return response.json(profiles);
+  }
+
+  /**
    * Render a form to be used for creating a new profile.
    * GET profiles/create
    *
@@ -75,6 +94,23 @@ class ProfileController {
     await profile.save();
 
     return response.status(201).json(profile.toJSON());
+  }
+
+  /**
+   * Display a single profile.
+   * GET profiles/users/:id
+   *
+   * @param {object} ctx
+   * @param {Request} ctx.request
+   * @param {Response} ctx.response
+   * @param {View} ctx.view
+   */
+  async showUser({ params: { id }, request, response, view }) {
+    console.log("> GET /profiles/users/:id");
+
+    const profile = await Profile.query().with("user").where({ id }).fetch();
+
+    return response.json(profile.toJSON());
   }
 
   /**
