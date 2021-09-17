@@ -29,6 +29,24 @@ class UserController {
 
     return response.json(users);
   }
+  /**
+   * Show a list of all users.
+   * GET users/posts
+   *
+   * @param {object} ctx
+   * @param {Request} ctx.request
+   * @param {Response} ctx.response
+   * @param {View} ctx.view
+   */
+  async indexPosts({ request, response, view }) {
+    console.log("> GET /users/posts");
+
+    const users = (await User.query().with("post").fetch()).toJSON();
+
+    response.header("X-Total-Count", users.length);
+
+    return response.json(users);
+  }
 
   /**
    * Render a form to be used for creating a new user.
@@ -77,6 +95,23 @@ class UserController {
     await user.save();
 
     return response.status(201).json(user.toJSON());
+  }
+
+  /**
+   * Display a single user.
+   * GET users/posts/:id
+   *
+   * @param {object} ctx
+   * @param {Request} ctx.request
+   * @param {Response} ctx.response
+   * @param {View} ctx.view
+   */
+  async showPosts({ params: { id }, request, response, view }) {
+    console.log("> GET /users/posts");
+
+    const userWithPosts = await User.query().where({ id }).with("post").fetch();
+
+    return response.json(userWithPosts.toJSON()[0]);
   }
 
   /**
