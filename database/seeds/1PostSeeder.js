@@ -16,7 +16,7 @@ const Post = use("App/Models/Post");
 
 class PostSeeder {
   async run() {
-    await Factory.model("App/Models/Post").createMany(2);
+    await Factory.model("App/Models/Post").createMany(4);
 
     const posts = (await Post.all()).toJSON();
 
