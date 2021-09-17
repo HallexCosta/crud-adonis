@@ -15,6 +15,10 @@ class User extends Model {
     return this.hasMany("App/Models/Post");
   }
 
+  static instance() {
+    return new User();
+  }
+
   static boot() {
     super.boot();
 
