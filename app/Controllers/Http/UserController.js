@@ -93,6 +93,15 @@ class UserController {
 
     const user = await User.find(id);
 
+    // const profile = (await user.profile().fetch()).toJSON();
+
+    // delete profile.user_id;
+    //
+    // const userProfile = {
+    //   ...user.toJSON(),
+    //   profile: profile,
+    // };
+
     return response.json(user);
   }
 
@@ -117,6 +126,7 @@ class UserController {
    */
   async update({ params: { id }, request, response }) {
     console.log("> PUT /users/:id");
+
     const { username, email, password } = request.body;
 
     const user = await User.find(id);
